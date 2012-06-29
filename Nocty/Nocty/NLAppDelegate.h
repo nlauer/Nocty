@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FBConnect.h"
 
 @class NLViewController;
 
-@interface NLAppDelegate : UIResponder <UIApplicationDelegate>
+@interface NLAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) NLViewController *viewController;
+@property (strong, nonatomic) Facebook *facebook;
 
 @end

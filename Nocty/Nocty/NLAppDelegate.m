@@ -7,13 +7,15 @@
 //
 
 #import "NLAppDelegate.h"
-
 #import "NLViewController.h"
+
+#define FB_APP_ID @"330108183740459"
 
 @implementation NLAppDelegate
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
+@synthesize facebook = _facebook;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -22,6 +24,18 @@
     self.viewController = [[NLViewController alloc] initWithNibName:@"NLViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
+    //Setup facebook login here, because the app cannot work without it
+    _facebook = [[Facebook alloc] initWithAppId:FB_APP_ID andDelegate:self];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:@"FBAccessTokenKey"] 
+        && [defaults objectForKey:@"FBExpirationDateKey"]) {
+        _facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
+        _facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+    }
+    if (![_facebook isSessionValid]) {
+        [_facebook authorize:nil];
+    }
     return YES;
 }
 
@@ -50,6 +64,20 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark -
+#pragma mark Facebook Methods
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [_facebook handleOpenURL:url]; 
+}
+
+- (void)fbDidLogin {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:[_facebook accessToken] forKey:@"FBAccessTokenKey"];
+    [defaults setObject:[_facebook expirationDate] forKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
 }
 
 @end
