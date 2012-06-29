@@ -11,7 +11,7 @@
 
 @class NLViewController;
 
-@interface NLAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate>
+@interface NLAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, FBRequestDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) NLViewController *viewController;

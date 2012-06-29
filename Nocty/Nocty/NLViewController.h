@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FBConnect.h"
 
-@interface NLViewController : UIViewController
+@interface NLViewController : UIViewController <FBRequestDelegate>
+@property (strong, nonatomic) NSMutableArray *youtubeLinks;
 
 @end

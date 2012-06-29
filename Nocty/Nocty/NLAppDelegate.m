@@ -34,7 +34,8 @@
         _facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
     }
     if (![_facebook isSessionValid]) {
-        [_facebook authorize:nil];
+        NSArray *permissions = [[NSArray alloc] initWithObjects:@"read_stream", nil];
+        [_facebook authorize:permissions];
     }
     return YES;
 }
@@ -78,6 +79,25 @@
     [defaults setObject:[_facebook accessToken] forKey:@"FBAccessTokenKey"];
     [defaults setObject:[_facebook expirationDate] forKey:@"FBExpirationDateKey"];
     [defaults synchronize];
+    
+    [self createArrayOfFriendIds];
+}
+
+- (void)createArrayOfFriendIds
+{
+    [_facebook requestWithGraphPath:@"me/friends" andDelegate:self];
+}
+
+#pragma mark - 
+#pragma mark FB Request Delegate
+- (void)request:(FBRequest *)request didLoad:(id)result
+{
+    NSDictionary *items = [(NSDictionary *)result objectForKey:@"data"];
+    for (NSDictionary *friend in items) {
+        long long fbid = [[friend objectForKey:@"id"]longLongValue];
+        [_facebook requestWithGraphPath:[NSString stringWithFormat:@"%lld/links", fbid] andDelegate:_viewController];
+        NSLog(@"id: %lld", fbid);
+    }
 }
 
 @end

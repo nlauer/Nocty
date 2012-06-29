@@ -13,6 +13,7 @@
 @end
 
 @implementation NLViewController
+@synthesize  youtubeLinks = _youtubeLinks;
 
 - (void)viewDidLoad
 {
@@ -26,9 +27,12 @@
     // Release any retained subviews of the main view.
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (void)request:(FBRequest *)request didLoad:(id)result
 {
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    NSDictionary *items = [(NSDictionary *)result objectForKey:@"data"];
+    for (NSDictionary *friend in items) {
+        NSLog(@"link: %@", [friend objectForKey:@"link"]);
+    }
 }
 
 @end
