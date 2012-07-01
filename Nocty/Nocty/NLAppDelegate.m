@@ -16,6 +16,7 @@
 }
 
 @synthesize window = _window;
+@synthesize navigationController = _navigationController;
 @synthesize viewController = _viewController;
 @synthesize facebook = _facebook;
 @synthesize friendArray = _friendArray;
@@ -44,8 +45,8 @@
     }
     
     self.viewController = [[NLViewController alloc] initWithNibName:@"NLViewController" bundle:nil];
-    self.window.rootViewController = self.viewController;
-    [self.window makeKeyAndVisible];
+    self.navigationController = [[UINavigationController alloc] initWithRootViewController:_viewController];
+    self.window.rootViewController = self.navigationController;
     return YES;
 }
 
@@ -81,7 +82,7 @@
     NSString *path = [NSString stringWithFormat:@"%lld/links", [[_friendArray objectAtIndex:currentIndexInFriendsArray] longLongValue]];
     NSLog(@"path:%@", path);
     [_facebook requestWithGraphPath:path andDelegate:_viewController];
-    if (currentIndexInFriendsArray >= [_friendArray count] - 1) {
+    if (currentIndexInFriendsArray >= 10) {
         NSLog(@"DONEEEE");
         currentIndexInFriendsArray = 0;
     }
@@ -120,6 +121,7 @@
         NSLog(@"id: %lld", fbid);
         [_friendArray addObject:[NSNumber numberWithLongLong:fbid]];
     }
+    [self.window makeKeyAndVisible];
 }
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error

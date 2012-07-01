@@ -17,6 +17,8 @@
 		85D9CBEC159D55B300A96B3F /* NLViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 85D9CBEA159D55B300A96B3F /* NLViewController.xib */; };
 		85D9CC02159D55D800A96B3F /* FBDialog.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85D9CBF5159D55D800A96B3F /* FBDialog.bundle */; };
 		85D9CC03159D55D800A96B3F /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D9CBFB159D55D800A96B3F /* libfacebook_ios_sdk.a */; };
+		85D9CC0A15A0E86F00A96B3F /* NLYoutubeVideoPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D9CC0815A0E86F00A96B3F /* NLYoutubeVideoPlayerController.m */; };
+		85D9CC0B15A0E86F00A96B3F /* NLYoutubeVideoPlayerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 85D9CC0915A0E86F00A96B3F /* NLYoutubeVideoPlayerController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +50,9 @@
 		85D9CBFF159D55D800A96B3F /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonBase.h; sourceTree = "<group>"; };
 		85D9CC00159D55D800A96B3F /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
 		85D9CC01159D55D800A96B3F /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		85D9CC0715A0E86F00A96B3F /* NLYoutubeVideoPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NLYoutubeVideoPlayerController.h; sourceTree = "<group>"; };
+		85D9CC0815A0E86F00A96B3F /* NLYoutubeVideoPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NLYoutubeVideoPlayerController.m; sourceTree = "<group>"; };
+		85D9CC0915A0E86F00A96B3F /* NLYoutubeVideoPlayerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NLYoutubeVideoPlayerController.xib; path = Nocty/NLYoutubeVideoPlayerController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +142,8 @@
 			children = (
 				85D9CBE7159D55B300A96B3F /* NLViewController.h */,
 				85D9CBE8159D55B300A96B3F /* NLViewController.m */,
+				85D9CC0715A0E86F00A96B3F /* NLYoutubeVideoPlayerController.h */,
+				85D9CC0815A0E86F00A96B3F /* NLYoutubeVideoPlayerController.m */,
 			);
 			name = "View Controllers";
 			path = Nocty;
@@ -146,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				85D9CBEA159D55B300A96B3F /* NLViewController.xib */,
+				85D9CC0915A0E86F00A96B3F /* NLYoutubeVideoPlayerController.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -211,6 +219,7 @@
 				85D9CBE0159D55B300A96B3F /* InfoPlist.strings in Resources */,
 				85D9CBEC159D55B300A96B3F /* NLViewController.xib in Resources */,
 				85D9CC02159D55D800A96B3F /* FBDialog.bundle in Resources */,
+				85D9CC0B15A0E86F00A96B3F /* NLYoutubeVideoPlayerController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,6 +233,7 @@
 				85D9CBE2159D55B300A96B3F /* main.m in Sources */,
 				85D9CBE6159D55B300A96B3F /* NLAppDelegate.m in Sources */,
 				85D9CBE9159D55B300A96B3F /* NLViewController.m in Sources */,
+				85D9CC0A15A0E86F00A96B3F /* NLYoutubeVideoPlayerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,7 +280,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
@@ -289,7 +299,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;

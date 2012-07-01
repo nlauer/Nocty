@@ -8,6 +8,7 @@
 
 #import "NLViewController.h"
 #import "NLAppDelegate.h"
+#import "NLYoutubeVideoPlayerController.h"
 
 @interface NLViewController ()
 
@@ -21,6 +22,7 @@
 {
     [super viewDidLoad];
     _youtubeLinks = [[NSMutableArray alloc] init];
+    self.title = @"Nocty";
 }
 
 - (void)viewDidUnload
@@ -28,6 +30,11 @@
     [self setTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
 }
 
 - (NSString*)getVideoIdFromYoutubeLink:(NSString*)link
@@ -83,7 +90,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[_youtubeLinks objectAtIndex:indexPath.row]]];
+    NLYoutubeVideoPlayerController *youtubeVideoPlayerController = [[NLYoutubeVideoPlayerController alloc] initWithVideoID:[_youtubeLinks objectAtIndex:indexPath.row]];
+    [self.navigationController pushViewController:youtubeVideoPlayerController animated:YES];
 }
 
 @end

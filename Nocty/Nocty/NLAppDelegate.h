@@ -14,6 +14,7 @@
 @interface NLAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, FBRequestDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) UINavigationController *navigationController;
 @property (strong, nonatomic) NLViewController *viewController;
 @property (strong, nonatomic) Facebook *facebook;
 @property (strong, nonatomic) NSMutableArray *friendArray;
