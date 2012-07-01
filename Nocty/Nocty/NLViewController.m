@@ -8,7 +8,6 @@
 
 #import "NLViewController.h"
 #import "NLAppDelegate.h"
-#import "NLYoutubeVideoPlayerController.h"
 
 @interface NLViewController ()
 
@@ -22,6 +21,7 @@
 {
     [super viewDidLoad];
     _youtubeLinks = [[NSMutableArray alloc] init];
+    [_tableView setRowHeight:120.0f];
     self.title = @"Nocty";
 }
 
@@ -30,11 +30,6 @@
     [self setTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
 }
 
 - (NSString*)getVideoIdFromYoutubeLink:(NSString*)link
@@ -63,8 +58,11 @@
     NSLog(@"view controller fail:%@", error);
 }
 
-- (IBAction)getStuff:(id)sender {
-    [((NLAppDelegate*)[[UIApplication sharedApplication] delegate]) getNextFriendsLink];
+- (NSString*)createIFrameFromVideoID:(NSString*)videoID
+{
+    NSString *iFrame = [NSString stringWithFormat:@"<iframe class=\"youtube-player\" type=\"text/html\" width=\"320\" height=\"120\" src=\"http://www.youtube.com/embed/%@\" frameborder=\"0\"></iframe>", videoID];
+    NSString *html = [NSString stringWithFormat:@"<html><head><title>.</title><style>body,html,iframe{margin:0;padding:0;}</style></head><body>%@</body></html>", iFrame];
+    return html;
 }
 
 #pragma mark - 
@@ -80,18 +78,14 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        UIWebView *youtubePlayerWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 120.0f)];
+        [youtubePlayerWebView setScalesPageToFit:NO];
+        [youtubePlayerWebView setTag:1000];
+        [cell addSubview:youtubePlayerWebView];
     }
-    cell.textLabel.text = [_youtubeLinks objectAtIndex:indexPath.row];
+    UIWebView *youtubePlayerWebView = (UIWebView*)[cell viewWithTag:1000];
+    [youtubePlayerWebView loadHTMLString:[self createIFrameFromVideoID:[_youtubeLinks objectAtIndex:indexPath.row]] baseURL:nil];
     return cell;
-}
-
-#pragma mark -
-#pragma mark - Table View Delegate
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NLYoutubeVideoPlayerController *youtubeVideoPlayerController = [[NLYoutubeVideoPlayerController alloc] initWithVideoID:[_youtubeLinks objectAtIndex:indexPath.row]];
-    [self.navigationController pushViewController:youtubeVideoPlayerController animated:YES];
 }
 
 @end
