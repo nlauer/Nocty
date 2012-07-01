@@ -16,5 +16,9 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) NLViewController *viewController;
 @property (strong, nonatomic) Facebook *facebook;
+@property (strong, nonatomic) NSMutableArray *friendArray;
+
+- (void)createArrayOfFriendIds;
+- (void)getNextFriendsLink;
 
 @end

@@ -11,20 +11,22 @@
 
 #define FB_APP_ID @"330108183740459"
 
-@implementation NLAppDelegate
+@implementation NLAppDelegate {
+    int currentIndexInFriendsArray;
+}
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 @synthesize facebook = _facebook;
+@synthesize friendArray = _friendArray;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.viewController = [[NLViewController alloc] initWithNibName:@"NLViewController" bundle:nil];
-    self.window.rootViewController = self.viewController;
-    [self.window makeKeyAndVisible];
     
+    _friendArray = [[NSMutableArray alloc] init];
+    currentIndexInFriendsArray = 0;
     //Setup facebook login here, because the app cannot work without it
     _facebook = [[Facebook alloc] initWithAppId:FB_APP_ID andDelegate:self];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -37,6 +39,13 @@
         NSArray *permissions = [[NSArray alloc] initWithObjects:@"read_stream", nil];
         [_facebook authorize:permissions];
     }
+    else {
+        [self createArrayOfFriendIds];
+    }
+    
+    self.viewController = [[NLViewController alloc] initWithNibName:@"NLViewController" bundle:nil];
+    self.window.rootViewController = self.viewController;
+    [self.window makeKeyAndVisible];
     return YES;
 }
 
@@ -67,6 +76,21 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (void)getNextFriendsLink
+{
+    NSString *path = [NSString stringWithFormat:@"%lld/links", [[_friendArray objectAtIndex:currentIndexInFriendsArray] longLongValue]];
+    NSLog(@"path:%@", path);
+    [_facebook requestWithGraphPath:path andDelegate:_viewController];
+    if (currentIndexInFriendsArray >= [_friendArray count] - 1) {
+        NSLog(@"DONEEEE");
+        currentIndexInFriendsArray = 0;
+    }
+    else {
+        currentIndexInFriendsArray = currentIndexInFriendsArray + 1;
+        [((NLAppDelegate*)[[UIApplication sharedApplication] delegate]) getNextFriendsLink];
+    }
+}
+
 #pragma mark -
 #pragma mark Facebook Methods
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
@@ -79,8 +103,6 @@
     [defaults setObject:[_facebook accessToken] forKey:@"FBAccessTokenKey"];
     [defaults setObject:[_facebook expirationDate] forKey:@"FBExpirationDateKey"];
     [defaults synchronize];
-    
-    [self createArrayOfFriendIds];
 }
 
 - (void)createArrayOfFriendIds
@@ -95,9 +117,14 @@
     NSDictionary *items = [(NSDictionary *)result objectForKey:@"data"];
     for (NSDictionary *friend in items) {
         long long fbid = [[friend objectForKey:@"id"]longLongValue];
-        [_facebook requestWithGraphPath:[NSString stringWithFormat:@"%lld/links", fbid] andDelegate:_viewController];
         NSLog(@"id: %lld", fbid);
+        [_friendArray addObject:[NSNumber numberWithLongLong:fbid]];
     }
+}
+
+- (void)request:(FBRequest *)request didFailWithError:(NSError *)error
+{
+    NSLog(@"app delegate fail:%@", error);
 }
 
 @end
