@@ -13,9 +13,7 @@
 
 @end
 
-@implementation NLViewController {
-    int linkThreshold;
-}
+@implementation NLViewController
 @synthesize tableView = _tableView;
 @synthesize youtubeLinks = _youtubeLinks;
 
@@ -23,7 +21,6 @@
 {
     [super viewDidLoad];
     _youtubeLinks = [[NSMutableArray alloc] init];
-    linkThreshold = 0;
 }
 
 - (void)viewDidUnload
@@ -33,33 +30,34 @@
     // Release any retained subviews of the main view.
 }
 
+- (NSString*)getVideoIdFromYoutubeLink:(NSString*)link
+{
+    NSString *stringStartingWithVideoID = [[link componentsSeparatedByString:@"v="] objectAtIndex:1];
+    NSString *videoID = [[stringStartingWithVideoID componentsSeparatedByString:@"&"] objectAtIndex:0];
+    return videoID;
+}
+
 - (void)request:(FBRequest *)request didLoad:(id)result
 {
     NSDictionary *items = [(NSDictionary *)result objectForKey:@"data"];
     for (NSDictionary *friend in items) {
         NSString *link = [friend objectForKey:@"link"];
-        if ([link rangeOfString:@"www.youtube.com"].length > 0) {
-            [_youtubeLinks addObject:link];
+        if ([link rangeOfString:@"www.youtube.com/watch?v="].length > 0) {
+            NSString *videoID = [self getVideoIdFromYoutubeLink:link];
+            [_youtubeLinks addObject:videoID];
         }
         NSLog(@"%@: link: %@", [[friend objectForKey:@"from"] objectForKey:@"name"], link);
     }
-//    if (_youtubeLinks.count < linkThreshold) {
-//        [((NLAppDelegate*)[[UIApplication sharedApplication] delegate]) getNextFriendsLink];
-//    }
-//    else {
-        [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-//    }
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error
 {
     NSLog(@"view controller fail:%@", error);
-//    [((NLAppDelegate*)[[UIApplication sharedApplication] delegate]) getNextFriendsLink];
 }
 
 - (IBAction)getStuff:(id)sender {
     [((NLAppDelegate*)[[UIApplication sharedApplication] delegate]) getNextFriendsLink];
-//    linkThreshold = [_youtubeLinks count] + 10;
 }
 
 #pragma mark - 
