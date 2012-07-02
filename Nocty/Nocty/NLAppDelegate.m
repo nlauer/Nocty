@@ -47,6 +47,7 @@
     self.viewController = [[NLViewController alloc] initWithNibName:@"NLViewController" bundle:nil];
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:_viewController];
     self.window.rootViewController = self.navigationController;
+    [self.window makeKeyAndVisible];
     return YES;
 }
 
@@ -82,7 +83,7 @@
     NSString *path = [NSString stringWithFormat:@"%lld/links", [[_friendArray objectAtIndex:currentIndexInFriendsArray] longLongValue]];
     NSLog(@"path:%@", path);
     [_facebook requestWithGraphPath:path andDelegate:_viewController];
-    if (currentIndexInFriendsArray >= 10) {
+    if (currentIndexInFriendsArray >= 20) {
         NSLog(@"DONEEEE");
         currentIndexInFriendsArray = 0;
     }
@@ -121,7 +122,7 @@
         NSLog(@"id: %lld", fbid);
         [_friendArray addObject:[NSNumber numberWithLongLong:fbid]];
     }
-    [self.window makeKeyAndVisible];
+    [self getNextFriendsLink];
 }
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error

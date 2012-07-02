@@ -29,7 +29,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [_youtubeVideoPlayer loadHTMLString:[self createIFrameFromVideoID] baseURL:nil];
+    NSString *youTubeVideoHTML = @"<html><head>\
+    <body style=\"margin:0\">\
+    <embed id=\"yt\" src=\"http://www.youtube.com/watch?v=%@\" type=\"application/x-shockwave-flash\" \
+    width=\"%0.0f\" height=\"%0.0f\"></embed>\
+    </body></html>";
+    
+    // Populate HTML with the URL and requested frame size
+    NSString *html = [NSString stringWithFormat:youTubeVideoHTML, self.videoID, self.view.frame.size.width, self.view.frame.size.height];
+    
+    // Load the html into the webview
+    [_youtubeVideoPlayer loadHTMLString:html baseURL:nil];
 }
 
 - (void)viewDidUnload
@@ -42,7 +52,7 @@
 
 - (NSString*)createIFrameFromVideoID
 {
-    NSString *iFrame = [NSString stringWithFormat:@"<iframe class=\"youtube-player\" type=\"text/html\" width=\"100\" height=\"150\" src=\"http://www.youtube.com/embed/%@\" frameborder=\"0\"></iframe>", _videoID];
+    NSString *iFrame = [NSString stringWithFormat:@"<iframe class=\"youtube-player\" type=\"text/html\" width=\"300\" height=\"400\" src=\"http://www.youtube.com/embed/%@\" frameborder=\"0\"></iframe>", _videoID];
     return iFrame;
 }
 

@@ -53,7 +53,6 @@
             NSString *videoID = [self getVideoIdFromYoutubeLink:link];
             [_youtubeLinks addObject:videoID];
         }
-        NSLog(@"%@: link: %@", [[friend objectForKey:@"from"] objectForKey:@"name"], link);
     }
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
@@ -61,10 +60,6 @@
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error
 {
     NSLog(@"view controller fail:%@", error);
-}
-
-- (IBAction)getStuff:(id)sender {
-    [((NLAppDelegate*)[[UIApplication sharedApplication] delegate]) getNextFriendsLink];
 }
 
 #pragma mark - 
