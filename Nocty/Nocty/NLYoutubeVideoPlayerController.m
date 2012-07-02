@@ -50,12 +50,6 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (NSString*)createIFrameFromVideoID
-{
-    NSString *iFrame = [NSString stringWithFormat:@"<iframe class=\"youtube-player\" type=\"text/html\" width=\"300\" height=\"400\" src=\"http://www.youtube.com/embed/%@\" frameborder=\"0\"></iframe>", _videoID];
-    return iFrame;
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;

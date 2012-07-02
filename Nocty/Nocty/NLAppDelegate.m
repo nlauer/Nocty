@@ -49,17 +49,7 @@
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://gdata.youtube.com/feeds/api/videos/gzDS-Kfd5XQ?v=2&alt=json"]];
-    [NSURLConnection connectionWithRequest:request delegate:self];
     return YES;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    NSError *e;
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&e];
-    NSString *category = [[[[[dict objectForKey:@"entry"] objectForKey:@"media$group"] objectForKey:@"media$category"] objectAtIndex:0] objectForKey:@"label"];
-    NSLog(@"CATEGORY TYPE:%@", category);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -92,10 +82,8 @@
 - (void)getNextFriendsLink
 {
     NSString *path = [NSString stringWithFormat:@"%lld/links", [[_friendArray objectAtIndex:currentIndexInFriendsArray] longLongValue]];
-    NSLog(@"path:%@", path);
     [_facebook requestWithGraphPath:path andDelegate:_viewController];
-    if (currentIndexInFriendsArray >= 20) {
-        NSLog(@"DONEEEE");
+    if (currentIndexInFriendsArray >= 50) {
         currentIndexInFriendsArray = 0;
     }
     else {
@@ -130,7 +118,6 @@
     NSDictionary *items = [(NSDictionary *)result objectForKey:@"data"];
     for (NSDictionary *friend in items) {
         long long fbid = [[friend objectForKey:@"id"]longLongValue];
-        NSLog(@"id: %lld", fbid);
         [_friendArray addObject:[NSNumber numberWithLongLong:fbid]];
     }
     [self getNextFriendsLink];

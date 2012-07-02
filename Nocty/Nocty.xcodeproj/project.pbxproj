@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8580946415A1578500A0E91E /* NLYoutubeVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 8580946315A1578500A0E91E /* NLYoutubeVideo.m */; };
 		85D9CBD6159D55B300A96B3F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D9CBD5159D55B300A96B3F /* UIKit.framework */; };
 		85D9CBD8159D55B300A96B3F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D9CBD7159D55B300A96B3F /* Foundation.framework */; };
 		85D9CBDA159D55B300A96B3F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D9CBD9159D55B300A96B3F /* CoreGraphics.framework */; };
@@ -22,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8580946215A1578500A0E91E /* NLYoutubeVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NLYoutubeVideo.h; path = Nocty/NLYoutubeVideo.h; sourceTree = "<group>"; };
+		8580946315A1578500A0E91E /* NLYoutubeVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NLYoutubeVideo.m; path = Nocty/NLYoutubeVideo.m; sourceTree = "<group>"; };
 		85D9CBD1159D55B300A96B3F /* Nocty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nocty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85D9CBD5159D55B300A96B3F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		85D9CBD7159D55B300A96B3F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -161,6 +164,8 @@
 		85D9CC06159D568C00A96B3F /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				8580946215A1578500A0E91E /* NLYoutubeVideo.h */,
+				8580946315A1578500A0E91E /* NLYoutubeVideo.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -242,7 +247,6 @@
 		};
 /* End PBXShellScriptBuildPhase section */
 
-
 /* Begin PBXSourcesBuildPhase section */
 		85D9CBCD159D55B300A96B3F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -252,6 +256,7 @@
 				85D9CBE6159D55B300A96B3F /* NLAppDelegate.m in Sources */,
 				85D9CBE9159D55B300A96B3F /* NLViewController.m in Sources */,
 				85D9CC0A15A0E86F00A96B3F /* NLYoutubeVideoPlayerController.m in Sources */,
+				8580946415A1578500A0E91E /* NLYoutubeVideo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,6 +379,7 @@
 				85D9CBF1159D55B300A96B3F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

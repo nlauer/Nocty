@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "FBConnect.h"
 
-@interface NLViewController : UIViewController <FBRequestDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface NLViewController : UIViewController <FBRequestDelegate, UITableViewDelegate, UITableViewDataSource, NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 @property (unsafe_unretained, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *youtubeLinks;
 

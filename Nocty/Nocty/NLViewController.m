@@ -9,20 +9,23 @@
 #import "NLViewController.h"
 #import "NLAppDelegate.h"
 #import "NLYoutubeVideoPlayerController.h"
+#import "NLYoutubeVideo.h"
 
 @interface NLViewController ()
-
+@property (strong, nonatomic) NSMutableData *data;
 @end
 
 @implementation NLViewController
 @synthesize tableView = _tableView;
 @synthesize youtubeLinks = _youtubeLinks;
+@synthesize data = _data;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     _youtubeLinks = [[NSMutableArray alloc] init];
     self.title = @"Nocty";
+    _data = [[NSMutableData alloc] init];
 }
 
 - (void)viewDidUnload
@@ -30,6 +33,11 @@
     [self setTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -44,6 +52,29 @@
     return videoID;
 }
 
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    [_data appendData:data];
+}
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    NSError *e;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&e];
+    if (dict) {
+        NLYoutubeVideo *youtubeVideo = [[NLYoutubeVideo alloc] initWithDataDictionary:dict];
+        if ([[youtubeVideo category] isEqualToString:@"Music"]) {
+            [_youtubeLinks addObject:youtubeVideo];
+            [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+        }
+    }
+    _data = [[NSMutableData alloc] init];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    NSLog(@"error:%@", error);
+}
+
 - (void)request:(FBRequest *)request didLoad:(id)result
 {
     NSDictionary *items = [(NSDictionary *)result objectForKey:@"data"];
@@ -51,10 +82,10 @@
         NSString *link = [friend objectForKey:@"link"];
         if ([link rangeOfString:@"www.youtube.com/watch?v="].length > 0) {
             NSString *videoID = [self getVideoIdFromYoutubeLink:link];
-            [_youtubeLinks addObject:videoID];
+            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://gdata.youtube.com/feeds/api/videos/%@?v=2&alt=json", videoID]]];
+            [NSURLConnection connectionWithRequest:request delegate:self];
         }
     }
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error
@@ -76,7 +107,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
-    cell.textLabel.text = [_youtubeLinks objectAtIndex:indexPath.row];
+    cell.textLabel.text = [((NLYoutubeVideo*)[_youtubeLinks objectAtIndex:indexPath.row]) title];
     return cell;
 }
 
@@ -85,7 +116,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NLYoutubeVideoPlayerController *youtubeVideoPlayerController = [[NLYoutubeVideoPlayerController alloc] initWithVideoID:[_youtubeLinks objectAtIndex:indexPath.row]];
+    NLYoutubeVideoPlayerController *youtubeVideoPlayerController = [[NLYoutubeVideoPlayerController alloc] initWithVideoID:[[_youtubeLinks objectAtIndex:indexPath.row] videoID]];
+    NSLog(@"videoID:%@",[[_youtubeLinks objectAtIndex:indexPath.row] videoID]);
     [self.navigationController pushViewController:youtubeVideoPlayerController animated:YES];
 }
 
