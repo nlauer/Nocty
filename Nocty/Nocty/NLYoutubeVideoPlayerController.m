@@ -29,21 +29,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSString *youTubeVideoHTML = @"<html><head>\
-    <body style=\"margin:0\">\
-    <embed id=\"yt\" src=\"http://www.youtube.com/watch?v=%@\" type=\"application/x-shockwave-flash\" \
-    width=\"%0.0f\" height=\"%0.0f\"></embed>\
-    </body></html>";
-    
-    // Populate HTML with the URL and requested frame size
-    NSString *html = [NSString stringWithFormat:youTubeVideoHTML, self.videoID, self.view.frame.size.width, self.view.frame.size.height];
-    
-    // Load the html into the webview
-    [_youtubeVideoPlayer loadHTMLString:html baseURL:nil];
+    [_youtubeVideoPlayer setDelegate:self];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://m.youtube.com/watch?v=%@", _videoID]]];
+    [_youtubeVideoPlayer loadRequest:request];
 }
 
 - (void)viewDidUnload
 {
+    [_youtubeVideoPlayer setDelegate:nil];
     [self setYoutubeVideoPlayer:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -51,6 +44,17 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
+}
+
+- (NSString*)createIFrameFromVideoID
+{
+    NSString *iFrame = [NSString stringWithFormat:@"<iframe class=\"youtube-player\" type=\"text/html\" width=\"300\" height=\"400\" src=\"http://www.youtube.com/embed/%@\" frameborder=\"0\"></iframe>", _videoID];
+    return iFrame;
+}
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     return YES;
 }

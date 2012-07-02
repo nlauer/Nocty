@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NLYoutubeVideoPlayerController : UIViewController
+@interface NLYoutubeVideoPlayerController : UIViewController <UIWebViewDelegate>
 
 - (id)initWithVideoID:(NSString*)videoID;
 @end

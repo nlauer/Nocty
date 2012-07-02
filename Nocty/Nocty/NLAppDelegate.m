@@ -46,6 +46,7 @@
     
     self.viewController = [[NLViewController alloc] initWithNibName:@"NLViewController" bundle:nil];
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:_viewController];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
     
@@ -83,7 +84,7 @@
 {
     NSString *path = [NSString stringWithFormat:@"%lld/links", [[_friendArray objectAtIndex:currentIndexInFriendsArray] longLongValue]];
     [_facebook requestWithGraphPath:path andDelegate:_viewController];
-    if (currentIndexInFriendsArray >= 50) {
+    if (currentIndexInFriendsArray >= 20) {
         currentIndexInFriendsArray = 0;
     }
     else {

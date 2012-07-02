@@ -62,10 +62,13 @@
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&e];
     if (dict) {
         NLYoutubeVideo *youtubeVideo = [[NLYoutubeVideo alloc] initWithDataDictionary:dict];
-        if ([[youtubeVideo category] isEqualToString:@"Music"]) {
+//        if ([[youtubeVideo category] isEqualToString:@"Music"]) {
             [_youtubeLinks addObject:youtubeVideo];
             [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-        }
+//        }
+    }
+    else {
+        NSLog(@"error:%@, data:%@", e, [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding]);
     }
     _data = [[NSMutableData alloc] init];
 }
@@ -105,9 +108,12 @@
     NSString *cellIdentifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
     }
     cell.textLabel.text = [((NLYoutubeVideo*)[_youtubeLinks objectAtIndex:indexPath.row]) title];
+    [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
+    cell.textLabel.textColor = [UIColor whiteColor];
+    cell.detailTextLabel.text = [((NLYoutubeVideo*)[_youtubeLinks objectAtIndex:indexPath.row]) category];
     return cell;
 }
 
