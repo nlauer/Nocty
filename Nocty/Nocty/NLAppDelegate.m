@@ -48,7 +48,18 @@
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:_viewController];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://gdata.youtube.com/feeds/api/videos/gzDS-Kfd5XQ?v=2&alt=json"]];
+    [NSURLConnection connectionWithRequest:request delegate:self];
     return YES;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    NSError *e;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&e];
+    NSString *category = [[[[[dict objectForKey:@"entry"] objectForKey:@"media$group"] objectForKey:@"media$category"] objectAtIndex:0] objectForKey:@"label"];
+    NSLog(@"CATEGORY TYPE:%@", category);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

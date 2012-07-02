@@ -11,7 +11,7 @@
 
 @class NLViewController;
 
-@interface NLAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, FBRequestDelegate>
+@interface NLAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, FBRequestDelegate, NSURLConnectionDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UINavigationController *navigationController;
