@@ -12,5 +12,6 @@
 @interface NLViewController : UIViewController <FBRequestDelegate, UITableViewDelegate, UITableViewDataSource>
 @property (unsafe_unretained, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *youtubeLinks;
+- (IBAction)getStuff:(id)sender;
 
 @end

@@ -82,13 +82,13 @@
     NSString *path = [NSString stringWithFormat:@"%lld/links", [[_friendArray objectAtIndex:currentIndexInFriendsArray] longLongValue]];
     NSLog(@"path:%@", path);
     [_facebook requestWithGraphPath:path andDelegate:_viewController];
-    if (currentIndexInFriendsArray >= [_friendArray count] - 1) {
+    if (currentIndexInFriendsArray >= 10) {
         NSLog(@"DONEEEE");
         currentIndexInFriendsArray = 0;
     }
     else {
         currentIndexInFriendsArray = currentIndexInFriendsArray + 1;
-        [self getNextFriendsLink];
+        [((NLAppDelegate*)[[UIApplication sharedApplication] delegate]) getNextFriendsLink];
     }
 }
 
@@ -122,7 +122,6 @@
         [_friendArray addObject:[NSNumber numberWithLongLong:fbid]];
     }
     [self.window makeKeyAndVisible];
-    [self getNextFriendsLink];
 }
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error
