@@ -13,6 +13,7 @@
 
 @implementation NLAppDelegate {
     int currentIndexInFriendsArray;
+    int maxLimitInFriendsArray;
 }
 
 @synthesize window = _window;
@@ -25,6 +26,7 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    maxLimitInFriendsArray = 0;
     
     _friendArray = [[NSMutableArray alloc] init];
     currentIndexInFriendsArray = 0;
@@ -73,6 +75,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [_facebook extendAccessTokenIfNeeded];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -84,12 +87,23 @@
 {
     NSString *path = [NSString stringWithFormat:@"%lld/links", [[_friendArray objectAtIndex:currentIndexInFriendsArray] longLongValue]];
     [_facebook requestWithGraphPath:path andDelegate:_viewController];
-    if (currentIndexInFriendsArray >= 20) {
-        currentIndexInFriendsArray = 0;
+    if (currentIndexInFriendsArray >= maxLimitInFriendsArray) {
+        currentIndexInFriendsArray = maxLimitInFriendsArray;
     }
     else {
         currentIndexInFriendsArray = currentIndexInFriendsArray + 1;
-        [((NLAppDelegate*)[[UIApplication sharedApplication] delegate]) getNextFriendsLink];
+        [self getNextFriendsLink];
+    }
+}
+
+- (void)startGettingMoreLinks
+{
+    maxLimitInFriendsArray += 20;
+    if (maxLimitInFriendsArray >= [_friendArray count]) {
+        maxLimitInFriendsArray = [_friendArray count];
+    }
+    else {
+        [self getNextFriendsLink];
     }
 }
 
@@ -100,11 +114,35 @@
     return [_facebook handleOpenURL:url]; 
 }
 
-- (void)fbDidLogin {
+- (void)fbDidLogin 
+{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:[_facebook accessToken] forKey:@"FBAccessTokenKey"];
     [defaults setObject:[_facebook expirationDate] forKey:@"FBExpirationDateKey"];
     [defaults synchronize];
+}
+
+- (void)fbDidExtendToken:(NSString *)accessToken expiresAt:(NSDate *)expiresAt
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:accessToken forKey:@"FBAccessTokenKey"];
+    [defaults setObject:expiresAt forKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
+}
+
+- (void)fbDidNotLogin:(BOOL)cancelled
+{
+    
+}
+
+- (void)fbSessionInvalidated 
+{
+    
+}
+
+- (void)fbDidLogout 
+{
+    
 }
 
 - (void)createArrayOfFriendIds
@@ -116,12 +154,13 @@
 #pragma mark FB Request Delegate
 - (void)request:(FBRequest *)request didLoad:(id)result
 {
+    NSLog(@"FB requests loaded");
     NSDictionary *items = [(NSDictionary *)result objectForKey:@"data"];
     for (NSDictionary *friend in items) {
         long long fbid = [[friend objectForKey:@"id"]longLongValue];
         [_friendArray addObject:[NSNumber numberWithLongLong:fbid]];
     }
-    [self getNextFriendsLink];
+    [self startGettingMoreLinks];
 }
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error

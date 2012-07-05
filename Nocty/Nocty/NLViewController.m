@@ -62,13 +62,10 @@
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&e];
     if (dict) {
         NLYoutubeVideo *youtubeVideo = [[NLYoutubeVideo alloc] initWithDataDictionary:dict];
-//        if ([[youtubeVideo category] isEqualToString:@"Music"]) {
+        if ([[youtubeVideo category] isEqualToString:@"Music"]) {
             [_youtubeLinks addObject:youtubeVideo];
-            [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-//        }
-    }
-    else {
-        NSLog(@"error:%@, data:%@", e, [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding]);
+            [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:[_youtubeLinks count]-1 inSection:0]] withRowAnimation:UITableViewRowAnimationRight];
+        }
     }
     _data = [[NSMutableData alloc] init];
 }
@@ -100,20 +97,34 @@
 #pragma mark - Table View DataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [_youtubeLinks count];
+    return [_youtubeLinks count] + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellIdentifier = @"cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+    UITableViewCell *cell = nil;
+    if (indexPath.row < [_youtubeLinks count]) {
+        NSString *cellIdentifier = @"cell";
+        cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+        }
+        cell.textLabel.text = [((NLYoutubeVideo*)[_youtubeLinks objectAtIndex:indexPath.row]) title];
+        [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
+        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.detailTextLabel.text = [((NLYoutubeVideo*)[_youtubeLinks objectAtIndex:indexPath.row]) category];
     }
-    cell.textLabel.text = [((NLYoutubeVideo*)[_youtubeLinks objectAtIndex:indexPath.row]) title];
-    [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
-    cell.textLabel.textColor = [UIColor whiteColor];
-    cell.detailTextLabel.text = [((NLYoutubeVideo*)[_youtubeLinks objectAtIndex:indexPath.row]) category];
+    else {
+        NSString *cellIdentifier = @"more";
+        cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+        }
+        [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
+        cell.textLabel.text = @"MORE";
+        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.detailTextLabel.text = @"";
+    }
     return cell;
 }
 
@@ -122,9 +133,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NLYoutubeVideoPlayerController *youtubeVideoPlayerController = [[NLYoutubeVideoPlayerController alloc] initWithVideoID:[[_youtubeLinks objectAtIndex:indexPath.row] videoID]];
-    NSLog(@"videoID:%@",[[_youtubeLinks objectAtIndex:indexPath.row] videoID]);
-    [self.navigationController pushViewController:youtubeVideoPlayerController animated:YES];
+    if (indexPath.row < [_youtubeLinks count]) {
+        NLYoutubeVideoPlayerController *youtubeVideoPlayerController = [[NLYoutubeVideoPlayerController alloc] initWithVideoID:[[_youtubeLinks objectAtIndex:indexPath.row] videoID]];
+        NSLog(@"videoID:%@",[[_youtubeLinks objectAtIndex:indexPath.row] videoID]);
+        [self.navigationController pushViewController:youtubeVideoPlayerController animated:YES];
+    }
+    else {
+        [((NLAppDelegate*)[[UIApplication sharedApplication] delegate]) startGettingMoreLinks];
+    }
 }
 
 @end

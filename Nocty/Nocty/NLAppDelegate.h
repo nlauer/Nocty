@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSMutableArray *friendArray;
 
 - (void)createArrayOfFriendIds;
+- (void)startGettingMoreLinks;
 - (void)getNextFriendsLink;
 
 @end
